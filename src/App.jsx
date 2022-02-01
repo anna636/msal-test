@@ -8,15 +8,30 @@ import { loginRequest } from "./authConfig";
 
 
 function ProfileContent() {
+  const proxy = "http://localhost:8080";
     const { instance, accounts, inProgress } = useMsal();
     const [accessToken, setAccessToken] = useState(null);
 
   const name = accounts[0] && accounts[0].name;
   
+  const postNewBid = async (e) => {
+    e.preventDefault()
+    try {
+       let response = await fetch(proxy);
+    console.log(await response.json());
 
+    return response;
+    }
+    catch (e) {
+      console.log(e)
+    }
+   
+  };
  
 
-    function RequestAccessToken() {
+  function RequestAccessToken() {
+
+     
         const request = {
             ...loginRequest,
             account: accounts[0]
@@ -37,8 +52,11 @@ function ProfileContent() {
     return (
         <>
             <h5 className="card-title">Welcome {name}</h5>
-            {accessToken ? 
-                <p>Access Token Acquired!</p>
+        {accessToken ? 
+          <>
+          <p>Access Token Acquired!</p>
+           <button onClick={e => postNewBid(e)}>Send request</button>
+            </>
                 :
                 <Button variant="secondary" onClick={RequestAccessToken}>Request Access Token</Button>
             }
