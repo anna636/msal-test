@@ -27,8 +27,24 @@ function ProfileContent() {
     }
    
   };
+
+  const authenticate = async (e) => {
+    console.log("acces token in auth is ", accessToken)
+    e.preventDefault()
+     let response = await fetch(proxy + "/authentication", {
+       method: "GET",
+       headers: {
+         Authorization: `oauth-bearer ${accessToken}`,
+         "Content-type": "application/json; charset=UTF-8",
+       },
+     });
+     console.log(await response.json());
+
+     return response;
+  }
  
 
+  
   function RequestAccessToken() {
 
      
@@ -40,27 +56,30 @@ function ProfileContent() {
         // Silently acquires an access token which is then attached to a request for Microsoft Graph data
         instance.acquireTokenSilent(request).then((response) => {
           setAccessToken(response.accessToken);
-          console.log("Your token is ", response.accessToken)
+          
         }).catch((e) => {
             instance.acquireTokenPopup(request).then((response) => {
               setAccessToken(response.accessToken);
-               console.log("Your token is ", response.accessToken);
+          
             });
         });
     }
 
     return (
-        <>
-            <h5 className="card-title">Welcome {name}</h5>
-        {accessToken ? 
+      <>
+        <h5 className="card-title">Welcome {name}</h5>
+        {accessToken ? (
           <>
-          <p>Access Token Acquired!</p>
-           <button onClick={e => postNewBid(e)}>Send request</button>
-            </>
-                :
-                <Button variant="secondary" onClick={RequestAccessToken}>Request Access Token</Button>
-            }
-        </>
+            <p>Access Token Acquired!</p>
+            <button onClick={(e) => postNewBid(e)}>Send request</button>
+            <button onClick={(e) => authenticate(e)}>Send authenticated request</button>
+          </>
+        ) : (
+          <Button variant="secondary" onClick={RequestAccessToken}>
+            Request Access Token
+          </Button>
+        )}
+      </>
     );
 };
 
