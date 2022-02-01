@@ -6,11 +6,15 @@ import Button from "react-bootstrap/Button";
 import React, { useState } from "react";
 import { loginRequest } from "./authConfig";
 
+
 function ProfileContent() {
     const { instance, accounts, inProgress } = useMsal();
     const [accessToken, setAccessToken] = useState(null);
 
-    const name = accounts[0] && accounts[0].name;
+  const name = accounts[0] && accounts[0].name;
+  
+
+ 
 
     function RequestAccessToken() {
         const request = {
@@ -20,10 +24,12 @@ function ProfileContent() {
 
         // Silently acquires an access token which is then attached to a request for Microsoft Graph data
         instance.acquireTokenSilent(request).then((response) => {
-            setAccessToken(response.accessToken);
+          setAccessToken(response.accessToken);
+          console.log("Your token is ", response.accessToken)
         }).catch((e) => {
             instance.acquireTokenPopup(request).then((response) => {
-                setAccessToken(response.accessToken);
+              setAccessToken(response.accessToken);
+               console.log("Your token is ", response.accessToken);
             });
         });
     }
@@ -40,12 +46,14 @@ function ProfileContent() {
     );
 };
 
+
 function App() {
   return (
     <PageLayout>
       <AuthenticatedTemplate>
         <p>You are signed in!</p>
         <ProfileContent />
+       
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
         <p>You are not signed in! Please sign in.</p>
