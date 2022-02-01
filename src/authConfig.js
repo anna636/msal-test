@@ -13,3 +13,7 @@ export const msalConfig = {
 export const loginRequest = {
   scopes: ["User.Read"],
 };
+
+export const graphConfig = {
+  graphMeEndpoint: "http://localhost:8080/authentication",
+};

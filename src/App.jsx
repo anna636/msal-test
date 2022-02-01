@@ -5,49 +5,17 @@ import {AuthenticatedTemplate,UnauthenticatedTemplate,useMsal,} from "@azure/msa
 import Button from "react-bootstrap/Button";
 import React, { useState } from "react";
 import { loginRequest } from "./authConfig";
+import { ProfileData } from "./components/ProfileData";
+import { callMsGraph } from "./graph";
 
 
 function ProfileContent() {
-  const proxy = "http://localhost:8080";
-    const { instance, accounts, inProgress } = useMsal();
-    const [accessToken, setAccessToken] = useState(null);
+    const { instance, accounts } = useMsal();
+    const [graphData, setGraphData] = useState(null);
 
-  const name = accounts[0] && accounts[0].name;
-  
-  const postNewBid = async (e) => {
-    e.preventDefault()
-    try {
-       let response = await fetch(proxy);
-    console.log(await response.json());
+    const name = accounts[0] && accounts[0].name;
 
-    return response;
-    }
-    catch (e) {
-      console.log(e)
-    }
-   
-  };
-
-  const authenticate = async (e) => {
-    console.log("acces token in auth is ", accessToken)
-    e.preventDefault()
-     let response = await fetch(proxy + "/authentication", {
-       method: "GET",
-       headers: {
-         Authorization: `oauth-bearer ${accessToken}`,
-         "Content-type": "application/json; charset=UTF-8",
-       },
-     });
-     console.log(await response.json());
-
-     return response;
-  }
- 
-
-  
-  function RequestAccessToken() {
-
-     
+    function RequestProfileData() {
         const request = {
             ...loginRequest,
             account: accounts[0]
@@ -55,31 +23,23 @@ function ProfileContent() {
 
         // Silently acquires an access token which is then attached to a request for Microsoft Graph data
         instance.acquireTokenSilent(request).then((response) => {
-          setAccessToken(response.accessToken);
-          
+            callMsGraph(response.accessToken).then(response => setGraphData(response));
         }).catch((e) => {
             instance.acquireTokenPopup(request).then((response) => {
-              setAccessToken(response.accessToken);
-          
+                callMsGraph(response.accessToken).then(response => setGraphData(response));
             });
         });
     }
 
     return (
-      <>
-        <h5 className="card-title">Welcome {name}</h5>
-        {accessToken ? (
-          <>
-            <p>Access Token Acquired!</p>
-            <button onClick={(e) => postNewBid(e)}>Send request</button>
-            <button onClick={(e) => authenticate(e)}>Send authenticated request</button>
-          </>
-        ) : (
-          <Button variant="secondary" onClick={RequestAccessToken}>
-            Request Access Token
-          </Button>
-        )}
-      </>
+        <>
+            <h5 className="card-title">Welcome {name}</h5>
+            {graphData ? 
+                <ProfileData graphData={graphData} />
+                :
+                <Button variant="secondary" onClick={RequestProfileData}>Request Profile Information</Button>
+            }
+        </>
     );
 };
 
