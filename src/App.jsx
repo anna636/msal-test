@@ -13,7 +13,8 @@ function ProfileContent() {
     const { instance, accounts } = useMsal();
     const [graphData, setGraphData] = useState(null);
 
-    const name = accounts[0] && accounts[0].name;
+  const name = accounts[0] && accounts[0].name;
+  console.log(accounts[0].homeAccountId);
 
     function RequestProfileData() {
         const request = {
