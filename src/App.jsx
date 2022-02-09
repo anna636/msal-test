@@ -7,6 +7,13 @@ import React, { useState } from "react";
 import { loginRequest } from "./authConfig";
 import { ProfileData } from "./components/ProfileData";
 import { callMsGraph } from "./graph";
+import "@ingka/svg-icon/dist/style.css";
+import "@ingka/button/dist/style.css";
+import "@ingka/carousel/dist/style.css";
+import "@ingka/tabs/dist/style.css";
+import "@ingka/focus/dist/style.css";
+import Application from './components/TabsList'
+
 
 
 function ProfileContent() {
@@ -39,7 +46,10 @@ function ProfileContent() {
                 <ProfileData graphData={graphData} />
                 :
                 <Button variant="secondary" onClick={RequestProfileData}>Request Profile Information</Button>
-            }
+        }
+        <p>tabs</p>
+        <Application/>
+        
         </>
     );
 };
@@ -48,6 +58,12 @@ function ProfileContent() {
 function App() {
   return (
     <PageLayout>
+
+
+
+
+
+      
       <AuthenticatedTemplate>
         <p>You are signed in!</p>
         <ProfileContent />

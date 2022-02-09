@@ -5,6 +5,8 @@
   "dependencies": {
     "@azure/msal-browser": "^2.21.0",
     "@azure/msal-react": "^1.2.0",
+    "@ingka/focus": "^3.0.8",
+    "@ingka/tabs": "^5.0.4",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
